@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EOS Meeting App{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon1.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+    <header class="CustomNavbar">
+        <div class="container-fluid">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='EOS.png') }}" alt="EOS Meeting App" class="dark-mode-logo">
+            </div>
+            <nav class="CustomNavbar-container-2">
+                <ul class="nav-tabs">
+                    <li><a href="{{ url_for('dashboard') }}" class="CustomNavbar-tab">Dashboard</a></li>
+                    <li><a href="{{ url_for('scorecard') }}" class="CustomNavbar-tab">Scorecard</a></li>
+                    <li><a href="{{ url_for('rocks') }}" class="CustomNavbar-tab">Rocks</a></li>
+                    <li><a href="{{ url_for('people') }}" class="CustomNavbar-tab">People</a></li>
+                    <li><a href="{{ url_for('todo') }}" class="CustomNavbar-tab">To-Do</a></li>
+                    <li><a href="{{ url_for('ids') }}" class="CustomNavbar-tab">IDS</a></li>
+                    <li><a href="{{ url_for('conclude') }}" class="CustomNavbar-tab">Conclude</a></li>
+                </ul>
+            </nav>
+            <div class="CustomNavbar-user-info">
+                <span class="CustomNavbar-user-info-name">{{ username }}</span>
+                <a href="{{ url_for('logout') }}" class="CustomNavbar-link">Logout</a>
+            </div>
+        </div>
+    </header>
+    <main class="c-l10-meeting-header">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 EOS Meeting App</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.CustomNavbar-tab').forEach(tab => {
+                if (tab.getAttribute('href') === currentPath) {
+                    tab.classList.add('active');
+                }
+            });
+        });
+    </script>    
+</body>
+</html>

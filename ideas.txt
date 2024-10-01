@@ -1,0 +1,5 @@
+Make green/red in scorecard
+Add a sumbit button in scorecard
+Sorting of some type
+Find a way to delete Headlines
+Fix the Solve/Archive in IDS

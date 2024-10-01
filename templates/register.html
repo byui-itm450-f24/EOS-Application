@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="login-container"> <!-- Reuse the container class -->
+    <h1 class="login-title">Register</h1>
+    <form method="POST" class="login-form"> <!-- Reuse the form class -->
+        <div class="form-group">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" id="username" name="username" class="form-input" required>
+        </div>
+        <div class="form-group">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" id="password" name="password" class="form-input" required>
+        </div>
+        <button type="submit" class="btn-login">Register</button> <!-- Reuse the button class -->
+    </form>
+    <p class="register-link">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p> <!-- Reuse the link class -->
+</div>
+{% endblock %}

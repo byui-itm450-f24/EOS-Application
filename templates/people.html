@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}People Headlines{% endblock %}
+
+{% block content %}
+<h1 class="todo-title">People Headlines</h1>
+<form id="people-form" class="todo-form">
+    <div class="form-group">
+        <label for="date" class="form-label">Date:</label>
+        <input type="date" id="date" name="date" class="form-input" required>
+    </div>
+    <div class="form-group">
+        <label for="headline" class="form-label">Headline:</label>
+        <textarea id="headline" name="headline" class="form-input" required></textarea>
+    </div>
+    <button type="submit" class="btn-login">Save Headline</button>
+</form>
+
+<div id="headlines-container" class="todo-list">
+    <h2 class="todo-title">Existing Headlines</h2>
+    {% for headline in headlines %}
+    <div class="todo-item">
+        <p><strong>Date:</strong> {{ headline.date }}</p>
+        <p><strong>Headline:</strong> {{ headline.headline }}</p>
+        <button class="delete-btn" data-id="{{ headline.id }}">
+            <i class="fa fa-trash"></i>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+document.getElementById('people-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch('/people', {
+        method: 'POST',
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('People headline saved successfully!');
+            this.reset();
+            location.reload(); // Reload the page to show the new headline
+        } else {
+            alert('Error saving headline. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const headlineId = this.dataset.id;
+        if (confirm('Are you sure you want to delete this headline?')) {
+            fetch(`/people/${headlineId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Headline deleted successfully!');
+                    location.reload(); // Reload the page to reflect the changes
+                } else {
+                    alert('Error deleting headline. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

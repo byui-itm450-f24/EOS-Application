@@ -1,0 +1,576 @@
+/* Existing styles */
+
+:root {
+    --primary-color: #00FFFF; /* Electric Cyan */
+    --primary-color-dark: #00CCCC; /* Darker shade of Electric Cyan for hover effects */
+    --secondary-color: #f8f8f8;
+    --background-color: #333333; /* Semi-dark grey */
+    --text-color: #f8f8f8;
+    --card-background: #444444;
+    --hover-color: rgba(0, 255, 255, 0.1);
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Logo styling */
+.logo-container img {
+    max-height: 50px; /* Adjusts the maximum height of the logo */
+    width: auto; /* Keeps the aspect ratio */
+}
+
+/* Navbar styling */
+.CustomNavbar {
+    background-color: var(--background-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+/* Logout link styling */
+.CustomNavbar-link {
+    color: var(--text-color); /* This makes the link white */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 18px 15px;
+    text-decoration: none; /* Remove underline */
+    transition: 0.35s;
+    border-bottom: 3px solid transparent;
+}
+
+.CustomNavbar-link:hover,
+.CustomNavbar-link.active {
+    color: var(--primary-color); /* Change color on hover */
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.CustomNavbar-container-2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.nav-tabs {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.CustomNavbar-tab {
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 18px 20px;
+    text-decoration: none;
+    transition: 0.35s;
+    border-bottom: 3px solid transparent;
+}
+
+.CustomNavbar-tab:hover,
+.CustomNavbar-tab.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.CustomNavbar-user-info {
+    display: flex;
+    align-items: center;
+}
+
+.CustomNavbar-user-info-name {
+    color: var(--secondary-color);
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 15px;
+}
+
+.c-l10-meeting-header {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        flex-direction: column;
+    }
+
+    .CustomNavbar-container-2 {
+        width: 100%;
+    }
+
+    .nav-tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .CustomNavbar-tab {
+        padding: 10px 15px;
+    }
+
+    .CustomNavbar-user-info {
+        margin-top: 10px;
+    }
+}
+
+/* Login Page Styles */
+.login-container {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.login-title {
+    color: var(--primary-color);
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    color: var(--secondary-color);
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-align: left;
+    display: block;
+}
+
+.form-input {
+    background-color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Button styling */
+.btn-login {
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    color: var(--background-color);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 12px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: var(--primary-color-dark);
+}
+
+/* Register link styling */
+.register-link a {
+    color: var(--text-color); /* White color for link */
+    font-weight: 700; /* Bold font */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: var(--primary-color); /* Change to primary color on hover */
+}
+
+@keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .eos-logo {
+    max-height: 50px; /* Adjusts the maximum height of the logo */
+    width: auto; /* Keeps the aspect ratio */
+    animation: pulse 2s infinite;
+  }
+  /* To-Do List Page Styles */
+.todo-container {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.todo-title {
+    color: var(--primary-color);
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.todo-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.todo-list {
+    margin-top: 20px;
+}
+
+.todo-item {
+    background-color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.todo-item p {
+    margin: 5px 0;
+}
+
+#rocks-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#rocks-table th,
+#rocks-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+#rocks-table th {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    font-weight: bold;
+}
+
+#rocks-table tr:hover {
+    background-color: var(--hover-color);
+}
+
+/* Rock Track Dropdown Styles */
+.rock-track {
+    background-color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 14px;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.rock-track:focus {
+    outline: none;
+    border-color: var(--primary-color-dark);
+}
+
+.rock-track option {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Responsive design for rocks table */
+@media (max-width: 768px) {
+    #rocks-table {
+        font-size: 14px;
+    }
+
+    #rocks-table th,
+    #rocks-table td {
+        padding: 8px;
+    }
+
+    .rock-track {
+        font-size: 12px;
+        padding: 6px;
+    }
+}
+#pending-problems {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+}
+
+#pending-problems-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#pending-problems-list li {
+    padding: 5px 0;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+#pending-problems-list li:last-child {
+    border-bottom: none;
+}
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.todo-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.todo-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 300px;
+}
+
+.btn-login {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.todo-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.todo-table th,
+.todo-table td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.todo-table th {
+  background-color: #f2f2f2;
+}
+
+.todo-item {
+  background-color: #f9f9f9;
+}
+
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.todo-container {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.todo-title {
+    color: var(--primary-color);
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.todo-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-label {
+    color: var(--secondary-color);
+    font-size: 16px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.form-input {
+    background-color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn-login {
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    color: var(--background-color);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 12px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.todo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.todo-table th,
+.todo-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.todo-table th {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    font-weight: bold;
+}
+
+.todo-item {
+    background-color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.todo-item p {
+    margin: 5px 0;
+}
+
+.todo-track {
+    background-color: var(--background-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 14px;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.todo-track:focus {
+    outline: none;
+    border-color: var(--primary-color-dark);
+}
+
+.todo-track option {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+    .todo-table {
+        font-size: 14px;
+    }
+
+    .todo-table th,
+    .todo-table td {
+        padding: 8px;
+    }
+
+    .todo-track {
+        font-size: 12px;
+        padding: 6px;
+    }
+}

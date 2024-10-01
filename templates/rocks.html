@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Rocks{% endblock %}
+
+{% block content %}
+<h1 class="todo-title">Rocks</h1>
+<form id="rocks-form" class="todo-form">
+    <div class="form-group">
+        <label for="description" class="form-label">Description:</label>
+        <input type="text" id="description" name="description" class="form-input" required>
+    </div>
+    <div class="form-group">
+        <label for="due_date" class="form-label">Due Date:</label>
+        <input type="date" id="due_date" name="due_date" class="form-input" required>
+    </div>
+    <div class="form-group">
+        <label for="status" class="form-label">Status:</label>
+        <select id="status" name="status" class="form-input" required>
+            <option value="Not Started">Not Started</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </div>
+    <button type="submit" class="btn-login">Save Rock</button>
+</form>
+
+<h2>Existing Rocks</h2>
+<table id="rocks-table">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Track</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for rock in rocks %}
+        <tr>
+            <td>{{ rock.description }}</td>
+            <td>{{ rock.due_date }}</td>
+            <td>{{ rock.status }}</td>
+            <td>
+                <select class="rock-track" data-description="{{ rock.description }}">
+                    <option value="Off Track" {% if rock.status == 'Off Track' %}selected{% endif %}>Off Track</option>
+                    <option value="On Track" {% if rock.status == 'On Track' %}selected{% endif %}>On Track</option>
+                    <option value="Done" {% if rock.status == 'Done' %}selected{% endif %}>Done</option>
+                </select>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+document.getElementById('rocks-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch('/rocks', {
+        method: 'POST',
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Rock saved successfully!');
+            this.reset();
+            location.reload(); // Reload the page to show the new rock
+        } else {
+            alert('Error saving rock. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+// Add event listeners for track changes
+document.querySelectorAll('.rock-track').forEach(select => {
+    select.addEventListener('change', function() {
+        const description = this.dataset.description;
+        const newStatus = this.value;
+        fetch('/update_rock_status', {
+            method: 'POST',
+            body: JSON.stringify({description: description, status: newStatus}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Rock status updated successfully!');
+            } else {
+                alert('Error updating rock status. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    });
+});
+</script>
+{% endblock %}

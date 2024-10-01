@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Conclude{% endblock %}
+
+{% block content %}
+<h1 class="todo-title">Conclude</h1>
+<form id="conclude-form" class="todo-form">
+    <div class="form-group">
+        <label for="date" class="form-label">Date:</label>
+        <input type="date" id="date" name="date" class="form-input" required>
+    </div>
+    <div class="form-group">
+        <label for="score" class="form-label">Meeting Score (1-10):</label>
+        <input type="number" id="score" name="score" class="form-input" min="1" max="10" required>
+    </div>
+    <div class="form-group">
+        <label for="notes" class="form-label">Notes:</label>
+        <textarea id="notes" name="notes" class="form-input" required></textarea>
+    </div>
+    <button type="submit" class="btn-login">Save Conclusion</button>
+</form>
+
+<script>
+document.getElementById('conclude-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch('/conclude', {
+        method: 'POST',
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Meeting conclusion saved successfully!');
+            this.reset();
+        } else {
+            alert('Error saving conclusion. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+</script>
+{% endblock %}

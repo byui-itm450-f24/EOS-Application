@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}IDS (Identify, Discuss, Solve){% endblock %}
+
+{% block content %}
+<div class="ids-container">
+    <div class="ids-list">
+        <h2 class="todo-title">IDS Problems</h2>
+        <div id="ids-problems-list">
+            {% for problem in problems %}
+                <div class="ids-problem" onclick="selectProblem('{{ problem.issue }}', '{{ problem.solution }}')">
+                    <h3>{{ problem.issue }}</h3>
+                    <p><strong>Discussion:</strong> {{ problem.discussion }}</p>
+                    <p><strong>Solution:</strong> {{ problem.solution if problem.solution else 'Pending' }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <button id="add-problem-button" class="btn-login">Add New Problem</button>
+    </div>
+    <div class="ids-details">
+        <h3 id="selected-problem-title" class="todo-title">Select a problem</h3>
+        <textarea id="problem-notes" class="form-input" placeholder="Add your notes here..." style="display: none;"></textarea>
+        <div class="button-group" style="display: none;">
+            <button id="solve-button" class="btn-login">Solve</button>
+            <button id="archive-button" class="btn-login">Archive</button>
+        </div>
+    </div>
+</div>
+
+<div id="add-problem-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Add New Problem</h2>
+        <input id="new-problem-issue" type="text" placeholder="Issue" class="form-input">
+        <textarea id="new-problem-discussion" placeholder="Discussion" class="form-input"></textarea>
+        <button id="submit-new-problem" class="btn-login">Submit</button>
+        <button id="close-modal" class="btn-login">Cancel</button>
+    </div>
+</div>
+
+<style>
+    .ids-container {
+        display: flex;
+        height: calc(100vh - 100px);
+        background-color: var(--background-color);
+    }
+    .ids-list {
+        width: 50%;
+        padding: 20px;
+        overflow-y: auto;
+    }
+    .ids-details {
+        width: 50%;
+        padding: 20px;
+        border-left: 1px solid var(--primary-color);
+    }
+    .ids-problem {
+        background-color: var(--card-background);
+        border: 1px solid var(--primary-color);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .ids-problem:hover {
+        background-color: var(--hover-color);
+    }
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+    #problem-notes {
+        width: 100%;
+        height: 150px;
+        margin-bottom: 15px;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+        background-color: var(--background-color);
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid var(--primary-color);
+        width: 80%;
+        max-width: 500px;
+    }
+    .form-input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+</style>
+
+<script>
+    let idsProblems = [];
+    let selectedProblem = null;
+
+    function fetchIDSProblems() {
+        fetch('/ids')
+            .then(response => response.json())
+            .then(data => {
+                idsProblems = data;
+                renderIDSProblems();
+            });
+    }
+
+    function renderIDSProblems() {
+    const listElement = document.getElementById('ids-problems-list');
+    const pendingListElement = document.getElementById('pending-problems-list');
+    listElement.innerHTML = '';
+    pendingListElement.innerHTML = '';
+
+    idsProblems.forEach(problem => {
+        const problemElement = document.createElement('div');
+        problemElement.className = 'ids-problem';
+        problemElement.innerHTML = `
+            <h3>${problem.issue}</h3>
+            <p><strong>Discussion:</strong> ${problem.discussion}</p>
+            <p><strong>Solution:</strong> ${problem.solution || 'Pending'}</p>
+        `;
+        problemElement.addEventListener('click', () => selectProblem(problem));
+        listElement.appendChild(problemElement);
+
+        if (problem.solution === 'Pending') {
+            const pendingProblemElement = document.createElement('li');
+            pendingProblemElement.innerHTML = `
+                <strong>${problem.issue}</strong>: ${problem.discussion}
+            `;
+            pendingListElement.appendChild(pendingProblemElement);
+        }
+    });
+}
+
+
+function selectProblem(issue, solution) {
+        document.getElementById('selected-problem-title').textContent = issue;
+        document.getElementById('problem-notes').style.display = 'block';
+        document.getElementById('problem-notes').value = solution === 'Pending' ? '' : solution;
+        document.querySelector('.button-group').style.display = 'flex';
+    }
+    function handleSolve() {
+        if (selectedProblem) {
+            const solution = document.getElementById('problem-notes').value;
+            fetch('/ids', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'solve',
+                    id: selectedProblem.id,
+                    solution: solution
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Problem marked as solved');
+                    fetchIDSProblems();
+                }
+            });
+        }
+    }
+
+    function handleArchive() {
+        if (selectedProblem) {
+            fetch('/ids', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: 'archive',
+                    id: selectedProblem.id
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Problem archived');
+                    fetchIDSProblems();
+                }
+            });
+        }
+    }
+
+    function showAddProblemModal() {
+        document.getElementById('add-problem-modal').style.display = 'block';
+    }
+
+    function hideAddProblemModal() {
+        document.getElementById('add-problem-modal').style.display = 'none';
+    }
+
+    function handleAddProblem() {
+        const issue = document.getElementById('new-problem-issue').value;
+        const discussion = document.getElementById('new-problem-discussion').value;
+
+        fetch('/ids', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                issue: issue,
+                discussion: discussion,
+                solution: 'Pending'
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('New problem added');
+                hideAddProblemModal();
+                fetchIDSProblems();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchIDSProblems();
+        document.getElementById('solve-button').addEventListener('click', handleSolve);
+        document.getElementById('archive-button').addEventListener('click', handleArchive);
+        document.getElementById('add-problem-button').addEventListener('click', showAddProblemModal);
+        document.getElementById('close-modal').addEventListener('click', hideAddProblemModal);
+        document.getElementById('submit-new-problem').addEventListener('click', handleAddProblem);
+    });
+</script>
+{% endblock %}

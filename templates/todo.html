@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}To-Do List{% endblock %}
+
+{% block content %}
+<div class="todo-container">
+    <h1 class="todo-title">To-Do List</h1>
+    <form id="todo-form" class="todo-form">
+        <div class="form-group">
+            <label for="description" class="form-label">Description:</label>
+            <input type="text" id="description" name="description" class="form-input" required>
+        </div>
+        <div class="form-group">
+            <label for="due_date" class="form-label">Due Date:</label>
+            <input type="date" id="due_date" name="due_date" class="form-input" required>
+        </div>
+        <div class="form-group">
+            <label for="status" class="form-label">Status:</label>
+            <select id="status" name="status" class="form-input" required>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-login">Add To-Do</button>
+    </form>
+
+    <h2>Existing To-Dos</h2>
+    <table id="todos-table" class="todo-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Track</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for todo in todos %}
+            <tr class="todo-item">
+                <td>{{ todo.description }}</td>
+                <td>{{ todo.due_date }}</td>
+                <td>{{ todo.status }}</td>
+                <td>
+                    <select class="todo-track" data-description="{{ todo.description }}">
+                        <option value="Not Started" {% if todo.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                        <option value="In Progress" {% if todo.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Completed" {% if todo.status == 'Completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button id="refresh-button" class="btn">Refresh</button>
+</div>
+
+<script>
+document.getElementById('todo-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch('/todo', {
+        method: 'POST',
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('To-Do item added successfully!');
+            this.reset();
+            location.reload(); // Reload the page to show the new to-do
+        } else {
+            alert('Error adding To-Do item. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+
+// Add event listeners for track changes
+document.querySelectorAll('.todo-track').forEach(select => {
+    select.addEventListener('change', function() {
+        const description = this.dataset.description;
+        const newStatus = this.value;
+        fetch('/update_todo_status', {
+            method: 'POST',
+            body: JSON.stringify({description: description, status: newStatus}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('To-Do status updated successfully!');
+            } else {
+                alert('Error updating To-Do status. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    });
+});
+</script>
+{% endblock %}

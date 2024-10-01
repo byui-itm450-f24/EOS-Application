@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Scorecard{% endblock %}
+
+{% block content %}
+<h1 class="todo-title">Scorecard: P3 Service Team</h1>
+
+<table id="scorecard-table">
+    <thead>
+        <tr>
+            <th>Who Measurable</th>
+            <th>Goal</th>
+            {% for entry in scorecard_data %}
+            <th>{{ entry.date }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ username }} Real Time Ticket Entry</td>
+            <td>≥ 850</td>
+            {% for entry in scorecard_data %}
+            <td>{{ entry.realTimeTicketEntry }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>{{ username }} Timesheets</td>
+            <td>≥ 1,400</td>
+            {% for entry in scorecard_data %}
+            <td>{{ entry.timesheets }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>{{ username }} Certifications</td>
+            <td>≥ 66%</td>
+            {% for entry in scorecard_data %}
+            <td>{{ entry.certifications }}%</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>{{ username }} Configurations</td>
+            <td>> 0</td>
+            {% for entry in scorecard_data %}
+            <td>{{ entry.configurations }}</td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+
+<!-- Rest of the template remains the same -->
+<h2>Add New Scorecard Entry</h2>
+<form id="scorecard-form" class="todo-form">
+    <div class="form-group">
+        <label for="date" class="form-label">Date:</label>
+        <input type="date" id="date" name="date" class="form-input" required>
+    </div>
+    <div class="form-group">
+        <label for="realTimeTicketEntry" class="form-label">Real Time Ticket Entry:</label>
+        <input type="number" id="realTimeTicketEntry" name="realTimeTicketEntry" class="form-input" required>
+    </div>
+    <div class="form-group">
+        <label for="timesheets" class="form-label">Timesheets:</label>
+        <input type="number" id="timesheets" name="timesheets" class="form-input" required>
+    </div>
+    <div class="form-group">
+        <label for="certifications" class="form-label">Certifications (%):</label>
+        <input type="number" id="certifications" name="certifications" class="form-input" required>
+    </div>
+    <div class="form-group">
+        <label for="configurations" class="form-label">Configurations:</label>
+        <input type="number" id="configurations" name="configurations" class="form-input" required>
+    </div>
+    <button type="submit" class="btn-login">Save Scorecard</button>
+</form>
+
+<script>
+document.getElementById('scorecard-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch('/scorecard', {
+        method: 'POST',
+        body: JSON.stringify(Object.fromEntries(formData)),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Scorecard saved successfully!');
+            location.reload(); // Reload the page to show the updated scorecard
+        } else {
+            alert('Error saving scorecard. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
+</script>
+
+<style>
+#scorecard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#scorecard-table th, #scorecard-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+#scorecard-table th {
+    background-color: #4e4a4a;
+}
+
+#scorecard-table tr:nth-child(even) {
+    background-color: #252525;
+}
+</style>
+{% endblock %}
